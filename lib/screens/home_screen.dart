@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hello_stateless/screens/loading_screen.dart';
 
 import '../common/string.dart' as strings;
 import '../services/mock_service.dart';
@@ -24,7 +25,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-    // _counter = widget.initialCounter;
     _loadCounter();
     print('after _loadCounter?');
   }
@@ -46,11 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
+      return const LoadingScreen();
     }
 
     return Scaffold(
