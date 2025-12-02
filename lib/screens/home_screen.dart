@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:hello_stateless/screens/loading_screen.dart';
 
 import '../common/string.dart' as strings;
 import '../services/mock_service.dart';
+import 'error_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
@@ -21,6 +24,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   late bool _isLoading;
 
+  String? _errorMessage;
+
   @override
   void initState() {
     super.initState();
@@ -35,7 +40,15 @@ class _HomeScreenState extends State<HomeScreen> {
     });
     print('_isLoading=$_isLoading');
 
-    _counter = await getCounter();
+    try {
+      _counter = await getCounter();
+    } on SocketException catch (e) {
+      print('Error loading counter: $e');
+      setState(() {
+        // _counter = widget.initialCounter;
+        _errorMessage = e.message;
+      });
+    }
 
     setState(() {
       _isLoading = false;
@@ -45,8 +58,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // If loading, show loading screen
     if (_isLoading) {
       return const LoadingScreen();
+    }
+
+    // If error occurred, show error screen
+    if (_errorMessage != null) {
+      return ErrorScreen(errorMessage: _errorMessage!);
     }
 
     return Scaffold(
