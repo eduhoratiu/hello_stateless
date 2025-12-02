@@ -34,26 +34,22 @@ class _HomeScreenState extends State<HomeScreen> {
     print('after _loadCounter?');
   }
 
+  /// Loads the counter value from the mock service asynchronously.
   void _loadCounter() async {
-    setState(() {
-      _isLoading = true;
-    });
-    print('_isLoading=$_isLoading');
+    // Indicate loading state and the loading screen should be shown
+    setState(() => _isLoading = true);
 
     try {
+      // Await the result from the mock service
       _counter = await getCounter();
     } on SocketException catch (e) {
-      print('Error loading counter: $e');
-      setState(() {
-        // _counter = widget.initialCounter;
-        _errorMessage = e.message;
-      });
+      // Handle network exception by indicating an error message and that the
+      // error screen should be shown
+      setState(() => _errorMessage = e.message);
     }
 
-    setState(() {
-      _isLoading = false;
-    });
-    print('_isLoading=$_isLoading');
+    // Indicate loading is complete and the normal screen should be shown
+    setState(() => _isLoading = false);
   }
 
   @override
@@ -68,6 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return ErrorScreen(errorMessage: _errorMessage!);
     }
 
+    // Otherwise, show the normal home screen
     return Scaffold(
       appBar: AppBar(
         title: const Text(strings.homeScreenTitle),
